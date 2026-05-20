@@ -35,16 +35,23 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync android
 
-      # FORCE JAVA 17
-      - name: Force Java 17
+      # FORCE JAVA 17 AFTER SYNC
+      - name: Replace Java 21
         run: |
-          find android -name "*.gradle" -exec sed -i 's/VERSION_21/VERSION_17/g' {} +
+          grep -R "VERSION_21" android || true
+          find android -type f -name "*.gradle" -exec sed -i 's/VERSION_21/VERSION_17/g' {} +
+          grep -R "VERSION_21" android || true
+
+      # FORCE JAVA HOME
+      - name: Set Java 17
+        run: |
+          echo "JAVA_HOME=$JAVA_HOME_17_X64" >> $GITHUB_ENV
 
       - name: Build APK
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
