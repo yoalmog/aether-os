@@ -1,4 +1,4 @@
-package com.example.app;
+package com.holospin.x;
 
 import com.getcapacitor.BridgeActivity;
 
