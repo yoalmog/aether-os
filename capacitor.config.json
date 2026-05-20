@@ -1,0 +1,6 @@
+{
+  "appId": "com.aether.os",
+  "appName": "Aether OS",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}

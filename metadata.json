@@ -1,0 +1,1 @@
+{"name":"Aether OS","description":"Production-grade futuristic mobile OS for ESP32-based POV RGB hologram fans. Features 3D visualizers, real-time telemetry, mode management, and OTA updates.","requestFramePermissions":["camera","microphone","geolocation"],"majorCapabilities":["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]}
