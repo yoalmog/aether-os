@@ -29,14 +29,16 @@ jobs:
       - name: Install Dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Install Missing Packages
-        run: npm install react-is --legacy-peer-deps
-
-      - name: Build Vite
+      - name: Build Web
         run: npm run build
 
       - name: Sync Capacitor
         run: npx cap sync android
+
+      # FORCE JAVA 17
+      - name: Force Java 17
+        run: |
+          find android -name "*.gradle" -exec sed -i 's/VERSION_21/VERSION_17/g' {} +
 
       - name: Build APK
         run: |
