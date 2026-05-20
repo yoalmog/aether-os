@@ -10,6 +10,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17/x64
+
     steps:
 
       - name: Checkout
@@ -35,23 +38,24 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync android
 
-      # FORCE JAVA 17 AFTER SYNC
-      - name: Replace Java 21
+      - name: Force Java 17
         run: |
-          grep -R "VERSION_21" android || true
-          find android -type f -name "*.gradle" -exec sed -i 's/VERSION_21/VERSION_17/g' {} +
-          grep -R "VERSION_21" android || true
 
-      # FORCE JAVA HOME
-      - name: Set Java 17
-        run: |
-          echo "JAVA_HOME=$JAVA_HOME_17_X64" >> $GITHUB_ENV
+          find android -type f -name "*.gradle" -exec sed -i \
+            -e 's/sourceCompatibility = 21/sourceCompatibility = 17/g' \
+            -e 's/targetCompatibility = 21/targetCompatibility = 17/g' \
+            -e 's/sourceCompatibility JavaVersion.VERSION_21/sourceCompatibility JavaVersion.VERSION_17/g' \
+            -e 's/targetCompatibility JavaVersion.VERSION_21/targetCompatibility JavaVersion.VERSION_17/g' \
+            -e 's/VERSION_21/VERSION_17/g' \
+            {} +
+
+          grep -R "21" android || true
 
       - name: Build APK
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug --stacktrace
+          ./gradlew assembleDebug --no-daemon --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
